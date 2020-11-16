@@ -1,4 +1,12 @@
-# Intial Setup
+# Shortening algorithm
+`id` - `short_code` conversion is just a conversion into another base numeral system (in this case base-62), where each value 0-61 is mapped onto an alphabet.
+
+The initial `CHARACTERS` array is shuffled with fixed RNG based on `secret_key_base`, so it persists between launches, and forms an alphabet.
+
+`short_code` itself is not populated into the database. It is being calculated based on `ShortUrl#id` and vice versa.
+
+
+# Initial Setup
 
     docker-compose build
     docker-compose up mariadb
