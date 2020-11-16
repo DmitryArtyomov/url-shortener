@@ -1,8 +1,8 @@
 version: '3'
 services:
-  short-app-rspec:
+  url-shortener-rspec:
     build: .
-    image: short-app
+    image: url-shortener-app
     env_file: ./test.env
     working_dir: /app
     command: rspec

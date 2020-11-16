@@ -2,17 +2,17 @@
 
     docker-compose build
     docker-compose up mariadb
-    docker-compose run short-app rails db:migrate
+    docker-compose run url-shortener-app rails db:migrate
     docker-compose -f docker-compose-test.yml build
 
 # To run migrations
 
-    docker-compose run short-app rails db:migrate
-    docker-compose -f docker-compose-test.yml run short-app-rspec rails db:test:prepare
+    docker-compose run url-shortener-app rails db:migrate
+    docker-compose -f docker-compose-test.yml run url-shortener-rspec rails db:test:prepare
 
 # To run the specs
 
-    docker-compose -f docker-compose-test.yml run short-app-rspec
+    docker-compose -f docker-compose-test.yml run url-shortener-rspec
 
 # Run the web server
 

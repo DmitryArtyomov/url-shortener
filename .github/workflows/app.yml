@@ -1,0 +1,44 @@
+name: Run tests and push app docker image
+on:
+  - push
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-18.04
+    env:
+      RAILS_ENV: test
+      RACK_ENV: test
+      DB_HOST: mariadb_rspec
+      DB_NAME: short_test
+      DB_USERNAME: root
+      DB_PASSWORD: password
+      REDIS_HOST: redis_rspec
+      SECRET_KEY_BASE: fakefakefake
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/docker-login@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build images
+        run: docker-compose -f docker-compose.yml -f docker-compose-test.yml build
+      - name: Setup database
+        run: docker-compose -f docker-compose-test.yml run url-shortener-rspec rails db:test:prepare
+      - name: Run tests
+        run: docker-compose -f docker-compose.yml -f docker-compose-test.yml run url-shortener-rspec
+
+  build:
+    if: github.ref == 'refs/heads/master'
+    needs: test
+    name: Build and publish docker image
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/docker-login@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build image
+        run: docker build . -f Dockerfile -t artyomovd/url-shortener:master
+      - name: Push image
+        run: docker push artyomovd/url-shortener:master

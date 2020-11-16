@@ -1,7 +1,7 @@
 version: '3'
 services:
-  short-app:
-    image: short-app
+  url-shortener-app:
+    image: url-shortener-app
     build: .
     stdin_open: true
     tty: true
@@ -22,7 +22,7 @@ services:
       - WEBPACKER_DEV_SERVER_HOST=webpacker
 
   worker:
-    image: short-app
+    image: url-shortener-app
     command: bundle exec rake resque:work
     env_file: ./dev.env
     working_dir: /app
@@ -55,14 +55,14 @@ services:
     - app
 
   webpacker:
-    image: short-app
+    image: url-shortener-app
     environment:
       - NODE_ENV=development
       - RAILS_ENV=development
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
     command: ./bin/webpack-dev-server --port 3035 --binding 0.0.0.0
     volumes:
-      - .:/short-app
+      - .:/url-shortener-app
     ports:
       - '3035:3035'
 
